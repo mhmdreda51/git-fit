@@ -2,9 +2,10 @@ import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:get_fit/presentation/screens/intro_screens/login_screen.dart';
 import 'package:meta/meta.dart';
-
-import '../../../widgets/custom_snack_bar.dart';
 
 part 'auth_state.dart';
 
@@ -26,18 +27,15 @@ class AuthCubit extends Cubit<AuthState> {
     emit(SignOutLoading());
     try {
       await firebaseAuth.signOut();
-      showSnackBar(msg: 'Signed out', snackBarStates: SnackBarStates.success);
-      // MagicRouter.navigateAndPopAll(const LoginView());
+      Fluttertoast.showToast(msg: "Sign Out Success");
+      Get.offAll(const LoginPage());
       emit(SignOutSuccess());
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
-      showSnackBar(
-          msg: e.code.toString(), snackBarStates: SnackBarStates.error);
       emit(SignOutFailed());
     } catch (e, s) {
       debugPrint(e.toString());
       debugPrint(s.toString());
-      showSnackBar(msg: e.toString(), snackBarStates: SnackBarStates.error);
       emit(SignOutFailed());
     }
   }
@@ -67,8 +65,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
 //===============================================================
-  TextEditingController signUpFirstNameController = TextEditingController();
-  TextEditingController signUpLastNameController = TextEditingController();
+  TextEditingController signUpUserNameController = TextEditingController();
   TextEditingController signUpEmailController = TextEditingController();
   TextEditingController signUpPasswordController = TextEditingController();
   TextEditingController signUpConfirmPassword = TextEditingController();
@@ -81,10 +78,8 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthInitial());
         return;
       }
-      if (signUpEmailController.text != signUpPasswordController.text) {
-        showSnackBar(
-            msg: 'Make sure that password is the same',
-            snackBarStates: SnackBarStates.warning);
+      if (signUpPasswordController.text != signUpConfirmPassword.text) {
+        Fluttertoast.showToast(msg: "Make sure that password is the same");
         emit(AuthInitial());
         return;
       }
