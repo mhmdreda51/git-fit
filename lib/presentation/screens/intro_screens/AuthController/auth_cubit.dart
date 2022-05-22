@@ -16,7 +16,8 @@ class AuthCubit extends Cubit<AuthState> {
   //===============================================================
 
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> signUpFormKey = GlobalKey<FormState>();
   TextEditingController loginEmailController = TextEditingController();
   TextEditingController loginPasswordController = TextEditingController();
 
@@ -45,7 +46,7 @@ class AuthCubit extends Cubit<AuthState> {
   void loginWithEmail() async {
     emit(LoginLoadingState());
     try {
-      if (!formKey.currentState!.validate()) {
+      if (!loginFormKey.currentState!.validate()) {
         emit(AuthInitial());
         return;
       }
@@ -71,13 +72,12 @@ class AuthCubit extends Cubit<AuthState> {
   TextEditingController signUpEmailController = TextEditingController();
   TextEditingController signUpPasswordController = TextEditingController();
   TextEditingController signUpConfirmPassword = TextEditingController();
-  GlobalKey<FormState> signUpFormKey = GlobalKey<FormState>();
 
 //===============================================================
   void signUpWithEmail() async {
     emit(SignUpLoadingState());
     try {
-      if (!formKey.currentState!.validate()) {
+      if (!signUpFormKey.currentState!.validate()) {
         emit(AuthInitial());
         return;
       }
